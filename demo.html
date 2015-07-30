@@ -1,0 +1,82 @@
+<textarea class="input_text">This is awesome</textarea>
+<button class="btn_speak">Speak!</button>
+<button class="btn_listvoices">List voices!</button>
+<br>
+<input class="input_voice" value="Google UK English Male">
+<button class="btn_setvoice">Set voice!</button>
+    
+<hr>
+    
+<button class="btn_startlisten">Start listening</button>
+<button class="btn_stoplisten">Stop listening</button>
+<input type="checkbox" class="input_live">Live
+<p class="output_result">...</p>
+
+<script src="blabla.js"></script>
+<script>
+// DEV SPEAKER
+var ta = document.querySelector('.input_text');
+var vo = document.querySelector('.input_voice');
+var btnSpeak = document.querySelector('.btn_speak');
+var btnListVoices = document.querySelector('.btn_listvoices');
+var btnSetVoice = document.querySelector('.btn_setvoice');
+
+btnSpeak.addEventListener('click', function () {
+  Blabla.speak(ta.value);
+}, false);
+
+btnListVoices.addEventListener('click', function () {
+  console.log(Blabla.listVoices());
+}, false);
+
+
+btnSetVoice.addEventListener('click', function () {
+  Blabla.setVoice(vo.value);
+}, false);
+
+Blabla.speaker.on('error', function (e) {
+  console.log('ERROR!');
+});
+Blabla.speaker.on('start', function (b) {
+  console.log('STARTED!');
+});
+Blabla.speaker.on('end', function (o) {
+  console.log('ENDED!');
+});
+
+// DEV LISTENER
+var btnStartListen = document.querySelector('.btn_startlisten');
+var btnStopListen = document.querySelector('.btn_stoplisten');
+var inputLive = document.querySelector('.input_live');
+var or = document.querySelector('.output_result');
+
+var useLive = false;
+inputLive.addEventListener('change', function (ev) {
+  useLive = ev.target.checked;
+}, false);
+
+
+var listener = Blabla.listen({ live: useLive });
+var finalResult = '';
+btnStartListen.addEventListener('click', function () {
+  listener.start();
+}, false);
+
+btnStopListen.addEventListener('click', function () {
+  listener.stop();
+}, false);
+
+Blabla.listener.on('result', function (result) {
+    var res = result.results[0];
+    finalResult = res[res.length - 1].transcript;
+    or.innerHTML = finalResult;
+});
+
+Blabla.listener.on('start', function () {
+  or.innerHTML = 'Started listening!!!';
+});
+
+Blabla.listener.on('end', function () {
+  if (!finalResult) or.innerHTML = 'Stopped listening.. No result';
+});
+</script>
