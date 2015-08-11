@@ -2,8 +2,7 @@
 
 > An awesome wrapper for the Chrome Speech(Synthesis) API 
 
-Use Chrome to speak text and or listen to voice input with ease.
-
+Use Chrome to speak text and or listen to voice input with ease [(demo)](http://jilles.sexy/blabla/).
 
 ## Install
 
