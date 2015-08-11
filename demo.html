@@ -1,8 +1,8 @@
 <textarea class="input_text">This is awesome</textarea>
 <button class="btn_speak">Speak!</button>
-<button class="btn_listvoices">List voices!</button>
 <br>
-<input class="input_voice" value="Google UK English Male">
+<select class="input_voice">
+</select>
 <button class="btn_setvoice">Set voice!</button>
     
 <hr>
@@ -18,31 +18,25 @@
 var ta = document.querySelector('.input_text');
 var vo = document.querySelector('.input_voice');
 var btnSpeak = document.querySelector('.btn_speak');
-var btnListVoices = document.querySelector('.btn_listvoices');
 var btnSetVoice = document.querySelector('.btn_setvoice');
+
+Blabla.on('voicesLoaded', function () {
+    Blabla.voices.forEach(function (voiceObj) {
+        var o = document.createElement('option');
+        o.value = voiceObj.name;
+        o.innerHTML = voiceObj.name + ' (' + voiceObj.lang + ')';
+        vo.appendChild(o);
+    });
+});
 
 btnSpeak.addEventListener('click', function () {
   Blabla.speak(ta.value);
 }, false);
 
-btnListVoices.addEventListener('click', function () {
-  console.log(Blabla.listVoices());
-}, false);
-
-
 btnSetVoice.addEventListener('click', function () {
   Blabla.setVoice(vo.value);
 }, false);
 
-Blabla.speaker.on('error', function (e) {
-  console.log('ERROR!');
-});
-Blabla.speaker.on('start', function (b) {
-  console.log('STARTED!');
-});
-Blabla.speaker.on('end', function (o) {
-  console.log('ENDED!');
-});
 
 // DEV LISTENER
 var btnStartListen = document.querySelector('.btn_startlisten');
@@ -56,9 +50,10 @@ inputLive.addEventListener('change', function (ev) {
 }, false);
 
 
-var listener = Blabla.listen({ live: useLive });
+var listener;
 var finalResult = '';
 btnStartListen.addEventListener('click', function () {
+  listener = Blabla.listen({ live: useLive });
   listener.start();
 }, false);
 
@@ -76,7 +71,7 @@ Blabla.listener.on('start', function () {
   or.innerHTML = 'Started listening!!!';
 });
 
-Blabla.listener.on('end', function () {
+Blabla.listener.on('end', function (result) {
   if (!finalResult) or.innerHTML = 'Stopped listening.. No result';
 });
 </script>

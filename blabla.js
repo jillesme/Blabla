@@ -4,6 +4,7 @@ var Blabla = (function () {
 
   var Blabla = {};
   var _settings = {
+    default: {},
     speaker: {},
     listener: {}
   };
@@ -20,11 +21,17 @@ var Blabla = (function () {
   // Set the voices (voices are loaded async!!)
   speechSynthesis.addEventListener('voiceschanged', function () {
     Blabla.voices = speechSynthesis.getVoices();
+    // Call voicesLoaded if loaded
+    if (_settings.default.voicesLoaded) _settings.default.voicesLoaded();
   });
 
   Blabla.listVoices = function () {
     return Blabla.voices.map(function (voice) {
-      return voice.name;
+      var voiceObj = {
+        name: voice.name,
+        lang: voice.lang
+      };
+      return voiceObj;
     });
   };
 
@@ -86,7 +93,10 @@ var Blabla = (function () {
     return recognizer;
   };
 
-  // Speaker event listeners
+  // Event listeners
+  Blabla.on = function (ev, cb) {
+    _settings.default[ev] = cb;
+  };
   Blabla.speaker = {
     on: function (ev, cb) {
       _settings.speaker[ev] = cb;
